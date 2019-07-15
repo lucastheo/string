@@ -16,6 +16,5 @@ if __name__ == "__main__":
     objCasa = CasamentoNome()
 
     for ele in listaNomes:
-        apoNome = Nome( ele )
-        objCasa.julgandoAdicioando( apoNome )
+        print( objCasa.julgandoAdicioandoPorStr( ele ) )
     #objCasa.julgando()

@@ -1,5 +1,6 @@
 
 import Levenshtein
+from nome import Nome
 
 def distanciaString( nome0:str, nome1:str):
     """
@@ -91,11 +92,9 @@ class CasamentoNome:
         self.hashCasamento = dict()         #caso já classificou
         self.grupos = list()                #os diversos grupos
 
-    def julgandoAdicioando( self, nome, parametro = 0.2 ):
+    def __julgando( self , nome ):
         """
-            Usado para adicionar elementos "Treino", os dados vao sendo adicionados com o tempo
-            O método vai gerando "grupos" de nomes que tem como objetivo separar os diversos nomes
-            O custo deve ser O(n), onde n é tamanho da quantidade nomes
+            julga dando o melhor caso que tem armazenado
         """
         nomeBase = nome.base
         if nomeBase in self.hashCasamento:
@@ -123,15 +122,41 @@ class CasamentoNome:
                 valorMaximo = valor     
                 maximo = i
             
+        return [ maximo, valorMaximo ]
+
+    def julgandoAdicioandoPorObjNome( self, nome, parametro = 0.2 ):
+        """
+            Usado para adicionar elementos "Treino", os dados vao sendo adicionados com o tempo
+            O método vai gerando "grupos" de nomes que tem como objetivo separar os diversos nomes
+            O custo deve ser O(n), onde n é tamanho da quantidade nomes
+        """
+       
+        apo = self.__julgando( nome )
+        maximo = apo[ 0 ]
+        valorMaximo = apo[ 1 ]
+            
         if valorMaximo < parametro:
             """
                 caso não passar o valor de parametro ele gera um novo grupo, ou seja,
                 um novo nome, esse algoritmo é bem lento para adicionar nome novos.
             """
             maximo =  len( self.grupos )    
+            nomeBase = nome.base
             self.hashCasamento[ nomeBase ] = maximo
             self.grupos.append( [nome ] )
         else:
-            grupo.append( nome )
-        print( maximo )    
+            self.grupos[ maximo ].append( nome )
         return maximo
+
+    def julgandoAdicioandoPorStr( self, nome:str, parametro = 0.2 ):
+        apo = Nome( nome )
+        return self.julgandoAdicioandoPorObjNome( apo , parametro)
+        
+
+    def julgandoPorObj( self , nome ):
+        apo = self.__julgando( nome )
+        return apo[ 0 ] 
+    def julgandoPorStr( self, nome:str):
+        apo = Nome( nome )
+        self.julgandoPorObj( apo )
+        return apo[ 0 ]
